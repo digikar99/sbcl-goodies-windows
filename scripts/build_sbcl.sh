@@ -18,11 +18,6 @@ if [ "$UNAME" == "Linux" ] ; then
     export SYS_LIBDIR="/usr/lib/x86_64-linux-gnu"
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
     export SYS_LIBDIR="/mingw64/lib"
-    curl -o "libretls-3.8.1.tar.gz" "https://git.causal.agency/libretls/snapshot/libretls-3.8.1.tar.gz"
-    tar -xvf libretls-3.8.1.tar.gz
-    cd libretls
-    autoreconf -fi && ./configure && make
-    cp .libs/libtls.a $SYS_LIBDIR
 fi
 
 
@@ -62,7 +57,7 @@ LIBTLS=${SYS_LIBDIR}/libtls.a
 if [ "$UNAME" == "Linux" ] ; then
     export STATIC_ARCHIVES="$LIBFIXPOSIX $LIBCRYPTO $LIBSSL $LIBTLS"
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-    export STATIC_ARCHIVES="$LIBCRYPTO $LIBSSL $LIBTLS"
+    export STATIC_ARCHIVES="$LIBCRYPTO $LIBSSL"
 fi
 
 
