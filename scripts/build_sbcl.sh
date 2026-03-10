@@ -82,7 +82,12 @@ mv -v sbcl "${SRCDIST}"
 bzip2 "${SRCDIST}"-source.tar
 
 # Build binary x86_64 distribution
-BINDIST="${SRCDIST}"-x86-64-linux
+if [ "$UNAME" == "Linux" ] ; then
+    BINDIST="${SRCDIST}"-x86-64-linux
+elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+    BINDIST="${SRCDIST}"-x86-64-windows
+fi
+
 mv -v "${SRCDIST}" "${BINDIST}"
 "${BINDIST}"/binary-distribution.sh "${BINDIST}"
 bzip2 "${BINDIST}"-binary.tar
