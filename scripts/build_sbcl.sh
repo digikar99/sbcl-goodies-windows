@@ -13,7 +13,18 @@ fi
 
 cd sbcl
 
-export SYS_LIBDIR="/usr/lib/x86_64-linux-gnu"
+UNAME=$(uname)
+if [ "$UNAME" == "Linux" ] ; then
+    export SYS_LIBDIR="/usr/lib/x86_64-linux-gnu"
+elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+    export SYS_LIBDIR="/mingw64/lib"
+    curl -o "libretls-3.8.1.tar.gz" "https://git.causal.agency/libretls/snapshot/libretls-3.8.1.tar.gz"
+    tar -xvf libretls-3.8.1.tar.gz
+    cd libretls
+    autoreconf -fi && ./configure && make
+    cp .libs/libtls.a $SYS_LIBDIR
+fi
+
 
 export LIBZSTD="$SYS_LIBDIR/libzstd.a"
 # Replace all instances of -lzstd in sbcl source with $LIBZSTD
@@ -48,7 +59,13 @@ LIBCRYPTO=${SYS_LIBDIR}/libcrypto.a
 LIBSSL=${SYS_LIBDIR}/libssl.a
 LIBTLS=${SYS_LIBDIR}/libtls.a
 
-export STATIC_ARCHIVES="$LIBFIXPOSIX $LIBCRYPTO $LIBSSL $LIBTLS"
+if [ "$UNAME" == "Linux" ] ; then
+    export STATIC_ARCHIVES="$LIBFIXPOSIX $LIBCRYPTO $LIBSSL $LIBTLS"
+elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
+    export STATIC_ARCHIVES="$LIBCRYPTO $LIBSSL $LIBTLS"
+fi
+
+
 
 make -C src/runtime -f binaries.mk sbcl.extras
 mv -vf src/runtime/sbcl.extras src/runtime/sbcl
