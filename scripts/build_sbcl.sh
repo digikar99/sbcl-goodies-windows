@@ -67,9 +67,11 @@ fi
 make -C src/runtime -f binaries.mk sbcl.extras
 mv -vf src/runtime/sbcl.extras src/runtime/sbcl
 
-# Include libfixposix headers
-mkdir -vp third_party/include
-cp -av ../destdir/usr/local/include/* third_party/include/
+if [ "$UNAME" == "Linux" ] ; then
+    # Include libfixposix headers
+    mkdir -vp third_party/include
+    cp -av ../destdir/usr/local/include/* third_party/include/
+fi
 
 cd ..
 
