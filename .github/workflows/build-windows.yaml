@@ -62,9 +62,6 @@ jobs:
           mkdir -vp "${CUSTOM_LIBDIR}"
           echo "CUSTOM_LIBDIR=${CUSTOM_LIBDIR}" >> "${GITHUB_ENV}"
                 
-      - name: Fetch SBCL host
-        run: scripts/fetch_sbcl_host.sh "${{env.SBCL_HOST_VERSION}}"
-        
       - name: Checkout SBCL
         uses: actions/checkout@v6
         with:

@@ -16,8 +16,16 @@ cd sbcl
 UNAME=$(uname)
 if [ "$UNAME" == "Linux" ] ; then
     export SYS_LIBDIR="/usr/lib/x86_64-linux-gnu"
+    SBCL_HOST="${SBCL_HOST}/run-sbcl.sh --noinform --no-userinit"
+    SBCL_BUILD_OPTIONS="--with-sb-core-compression \
+    --with-sb-linkable-runtime \
+    --without-gencgc --with-mark-region-gc \
+    --without-sb-eval \
+    --with-sb-fasteval"
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
     export SYS_LIBDIR="/mingw64/lib"
+    SBCL_HOST="/mingw64/bin/sbcl --noinform --no-userinit"
+    SBCL_BUILD_OPTIONS="--fancy --with-sb-linkable-runtime"
 fi
 
 
@@ -41,12 +49,7 @@ popd
 
 env SBCL_MAKE_PARALLEL=1 \
     SBCL_MAKE_JOBS=-j4 \
-    ./make.sh --xc-host="${SBCL_HOST}/run-sbcl.sh --noinform --no-userinit" \
-    --with-sb-core-compression \
-    --with-sb-linkable-runtime \
-    --without-gencgc --with-mark-region-gc \
-    --without-sb-eval \
-    --with-sb-fasteval
+    ./make.sh --xc-host="$SBCL_HOST" $SBCL_BUILD_OPTIONS
 
 # Link runtime with goodies and overwrite the original
 LIBFIXPOSIX=${CUSTOM_LIBDIR}/libfixposix.a
