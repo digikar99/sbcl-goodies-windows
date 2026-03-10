@@ -8,7 +8,8 @@ diff -Naur sbcl.old/binary-distribution.sh sbcl.new/binary-distribution.sh
 -    $b/src/runtime/sbcl.mk \
 +    $b/src/runtime/sbcl.mk $b/src/runtime/binaries.mk $b/third_party/include \
 +    $b/zstd-bsd/LICENSE \
-     `grep '^LIBSBCL=' $b/src/runtime/sbcl.mk | cut -d= -f2- | while read lib; do echo $b/src/runtime/$lib; done` \
+-    `grep '^LIBSBCL=' $b/src/runtime/sbcl.mk | cut -d= -f2- | while read lib; do echo $b/src/runtime/$lib; done` \
++     `for lib in $(grep '^LIBSBCL=' $b/src/runtime/sbcl.mk | cut -d= -f2-); do echo -n $b/src/runtime/$lib " "; done` \
      $b/BUGS $b/COPYING $b/CREDITS $b/INSTALL $b/NEWS $b/README \
      $b/install.sh $b/find-gnumake.sh $b/sbcl-pwd.sh $b/run-sbcl.sh \
 diff -Naur sbcl.old/make-target-2-load.lisp sbcl.new/make-target-2-load.lisp
