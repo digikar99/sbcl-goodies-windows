@@ -47,9 +47,7 @@ pushd contrib/asdf
 ./pull-asdf.sh "${ASDF_VERSION}"
 popd
 
-env SBCL_MAKE_PARALLEL=1 \
-    SBCL_MAKE_JOBS=-j4 \
-    ./make.sh --xc-host="$SBCL_HOST" $SBCL_BUILD_OPTIONS
+./make.sh --xc-host="$SBCL_HOST" $SBCL_BUILD_OPTIONS
 
 # Link runtime with goodies and overwrite the original
 LIBFIXPOSIX=${CUSTOM_LIBDIR}/libfixposix.a
