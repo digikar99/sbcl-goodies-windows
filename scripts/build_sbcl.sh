@@ -22,10 +22,12 @@ if [ "$UNAME" == "Linux" ] ; then
     --without-gencgc --with-mark-region-gc \
     --without-sb-eval \
     --with-sb-fasteval"
+    LIBCRYPTO=${SYS_LIBDIR}/libcrypto.a
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
     export SYS_LIBDIR="/mingw64/lib"
     SBCL_HOST="/mingw64/bin/sbcl --noinform --no-userinit"
     SBCL_BUILD_OPTIONS="--fancy --with-sb-linkable-runtime"
+    LIBCRYPTO="${SYS_LIBDIR}/libcrypto.a ${SYS_LIBDIR}/libcrypt32.a ${SYS_LIBDIR}/libgdi32.a ${SYS_LIBDIR}/libws2_32.a"
 fi
 
 
@@ -51,7 +53,6 @@ popd
 
 # Link runtime with goodies and overwrite the original
 LIBFIXPOSIX=${CUSTOM_LIBDIR}/libfixposix.a
-LIBCRYPTO=${SYS_LIBDIR}/libcrypto.a
 LIBSSL=${SYS_LIBDIR}/libssl.a
 LIBTLS=${SYS_LIBDIR}/libtls.a
 
