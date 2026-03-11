@@ -27,7 +27,7 @@ elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
     export SYS_LIBDIR="/mingw64/lib"
     SBCL_HOST="/mingw64/bin/sbcl --noinform --no-userinit"
     SBCL_BUILD_OPTIONS="--fancy --with-sb-linkable-runtime"
-    LIBCRYPTO="${SYS_LIBDIR}/libcrypto.a ${SYS_LIBDIR}/libcrypt32.a ${SYS_LIBDIR}/libgdi32.a ${SYS_LIBDIR}/libws2_32.a"
+    LIBCRYPTO="${SYS_LIBDIR}/libcrypto.a ${SYS_LIBDIR}/libcrypt32.a"
 fi
 
 
