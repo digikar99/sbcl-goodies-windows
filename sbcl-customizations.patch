@@ -618,7 +618,7 @@ diff -Naur sbcl.old/src/runtime/binaries.mk sbcl.new/src/runtime/binaries.mk
 +	$(CC) -fno-pie -no-pie $(LINKFLAGS) -o $@ $(LIBSBCL) $(LIBS)
 +
 +sbcl.extras: $(LIBSBCL)
-+	$(CC) -fno-pie -no-pie $(LINKFLAGS) -o $@ $(LIBSBCL) $(SLIBS) $(LIBS)
++	$(CC) -fno-pie -no-pie $(LINKFLAGS) -o $@ $(USE_LIBSBCL) $(SLIBS) $(LIBS)
 +
 +clean:
 +	$(RM) $(BINARIES)
