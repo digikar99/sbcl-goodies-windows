@@ -59,10 +59,8 @@ LIBTLS=${SYS_LIBDIR}/libtls.a
 if [ "$UNAME" == "Linux" ] ; then
     export STATIC_ARCHIVES="$LIBFIXPOSIX $LIBCRYPTO $LIBSSL $LIBTLS"
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-    export STATIC_ARCHIVES="$LIBCRYPTO $LIBSSL"
+    export STATIC_ARCHIVES="$LIBSSL -Wl,--no-whole-archive $LIBCRYPTO"
 fi
-
-
 
 make -C src/runtime -f binaries.mk sbcl.extras
 mv -vf src/runtime/sbcl.extras src/runtime/sbcl
