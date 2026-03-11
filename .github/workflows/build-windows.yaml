@@ -5,7 +5,7 @@ permissions:
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "windows" ]
     paths: [ "build.env" ]
   pull_request:
     types: [ opened, reopened, synchronize ]
@@ -80,7 +80,6 @@ jobs:
         with:
           name: tarballs
           path: |
-            ${{env.SRCDIST}}
             ${{env.BINDIST}}
           retention-days: 5
 
@@ -92,7 +91,7 @@ jobs:
         shell: msys2 {0}
         
     needs: build
-    if: github.ref_name == 'master'
+    if: github.ref_name == 'windows'
     permissions:
       contents: write
       
