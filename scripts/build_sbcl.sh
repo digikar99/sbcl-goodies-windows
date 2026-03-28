@@ -49,17 +49,21 @@ pushd contrib/asdf
 ./pull-asdf.sh "${ASDF_VERSION}"
 popd
 
+LIBZSTD=${SYS_LIBDIR}/libzstd.a
+# Quick hack, not safe for cross-compiling.
+sed -i "s:-lzstd:$LIBZSTD:" src/runtime/Config.*
+cp ../scripts/COPYING.zstd ./
+
 ./make.sh --xc-host="$SBCL_HOST" $SBCL_BUILD_OPTIONS
 
-# Link runtime with goodies and overwrite the original
 LIBFIXPOSIX=${CUSTOM_LIBDIR}/libfixposix.a
 LIBSSL=${SYS_LIBDIR}/libssl.a
 LIBTLS=${SYS_LIBDIR}/libtls.a
 
 if [ "$UNAME" == "Linux" ] ; then
-    export STATIC_ARCHIVES="$LIBFIXPOSIX $LIBCRYPTO $LIBSSL $LIBTLS"
+    export WHOLE_ARCHIVES="$LIBFIXPOSIX $LIBCRYPTO $LIBSSL $LIBTLS"
 elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* ]] ; then
-    export STATIC_ARCHIVES="$LIBSSL -Wl,--no-whole-archive $LIBCRYPTO"
+    export WHOLE_ARCHIVES="$LIBSSL -Wl,--no-whole-archive $LIBCRYPTO"
 fi
 
 make -C src/runtime -f binaries.mk sbcl.extras
