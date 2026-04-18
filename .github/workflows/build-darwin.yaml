@@ -5,8 +5,6 @@ permissions:
 
 on:
   push:
-    branches: [ "master" ]
-    paths: [ "build.env" ]
   pull_request:
     types: [ opened, reopened, synchronize ]
     paths:
@@ -19,16 +17,15 @@ on:
       - "**/build.yaml"
   workflow_dispatch:
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
   build:
-    runs-on: macos-15
+    strategy:
+      matrix:
+        os: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.os }}
     permissions:
       artifact-metadata: write
     steps:

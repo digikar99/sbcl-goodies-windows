@@ -5,8 +5,6 @@ permissions:
 
 on:
   push:
-    branches: [ "master" ]
-    paths: [ "build.env" ]
   pull_request:
     types: [ opened, reopened, synchronize ]
     paths:
@@ -19,24 +17,18 @@ on:
       - "**/build.yaml"
   workflow_dispatch:
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
     permissions:
       artifact-metadata: write
     steps:
-      - name: OS setup
-        run: |
-          sudo apt-get -y remove --autoremove --purge apache2 firefox powershell ubuntu-pro-client
-          sudo apt-get -y update
-          sudo apt-get -y upgrade
       - name: Checkout build scripts
         uses: actions/checkout@v6
       - name: Read build.env
