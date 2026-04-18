@@ -27,28 +27,28 @@ UNAME=$(uname -s)
 
 # Link runtime with goodies and overwrite the original
 if [ "$UNAME" == Linux ]; then
-    export SYS_LIBDIR="/usr/lib/x86_64-linux-gnu"
-    LIBZSTD=${SYS_LIBDIR}/libzstd.a
+    export SYS_LIBDIR="/usr/lib/"
+    LIBZSTD=$(find $SYS_LIBDIR -name "libzstd.a" | head -1)
     # Quick hack, not safe for cross-compiling.
     sed -i "s:-lzstd:$LIBZSTD:" src/runtime/Config.*
 
     LIBFIXPOSIX=${CUSTOM_LIBDIR}/libfixposix.a
-    LIBCRYPTO=${SYS_LIBDIR}/libcrypto.a
-    LIBSSL=${SYS_LIBDIR}/libssl.a
-    LIBTLS=${SYS_LIBDIR}/libtls.a
+    LIBCRYPTO=$(find $SYS_LIBDIR -name "libcrypto.a" | head -1)
+    LIBSSL=$(find $SYS_LIBDIR -name "libssl.a" | head -1)
+    LIBTLS=$(find $SYS_LIBDIR -name "libtls.a" | head -1)
 
     export WHOLE_ARCHIVES="-Wl,--whole-archive $LIBFIXPOSIX $LIBCRYPTO $LIBSSL $LIBTLS"
 
 elif [ "$UNAME" == Darwin ]; then
-    export SYS_LIBDIR="/opt/homebrew/Cellar"
-    LIBZSTD=${SYS_LIBDIR}/zstd/1.5.7_1/lib/libzstd.a
+    export SYS_LIBDIR="$(brew --prefix)"
+    LIBZSTD=$(find $SYS_LIBDIR -name "libzstd.a" | head -1)
     # Quick hack, not safe for cross-compiling.
     sed -i '' "s:-lzstd:$LIBZSTD:" src/runtime/Config.*
 
     LIBFIXPOSIX=${CUSTOM_LIBDIR}/libfixposix.a
-    LIBCRYPTO="${SYS_LIBDIR}/openssl@3/${OPENSSL_VERSION}/lib/libcrypto.a"
-    LIBSSL="${SYS_LIBDIR}/openssl@3/${OPENSSL_VERSION}/lib/libssl.a"
-    LIBTLS="${SYS_LIBDIR}/libretls/${LIBTLS_VERSION}/lib/libtls.a"
+    LIBCRYPTO=$(find $SYS_LIBDIR -name "libcrypto.a" | head -1)
+    LIBSSL=$(find $SYS_LIBDIR -name "libssl.a" | head -1)
+    LIBTLS=$(find $SYS_LIBDIR -name "libtls.a" | head -1)
 
     # -force_load only works on one library at a time
     export WHOLE_ARCHIVES="-Wl,-force_load $LIBFIXPOSIX -Wl,-force_load $LIBCRYPTO -Wl,-force_load $LIBSSL -Wl $LIBTLS"
